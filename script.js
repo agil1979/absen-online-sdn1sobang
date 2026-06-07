@@ -1,13 +1,8 @@
-// GANTI DENGAN KOORDINAT KANTOR ANDA
-const OFFICE_LAT = -6.6278727078727; 
-const OFFICE_LNG = 106.2940380097887;
-const MAX_DISTANCE = 100; // Meter
-
-const video = document.getElementById('camera');
-const canvas = document.getElementById('canvas');
-const preview = document.getElementById('preview');
-const btnAbsen = document.getElementById('btn-absen');
-const locStatus = document.getElementById('location-status');
+// 1. KONFIGURASI
+const WEB_APP_URL = "URL_APPS_SCRIPT_ANDA_DI_SINI"; 
+const OFFICE_LAT = -6.628209010488044; // Koordinat Anda yang terdeteksi tadi
+const OFFICE_LNG = 106.29402842818563;
+const MAX_DISTANCE = 100;
 
 const video = document.getElementById('camera');
 const canvas = document.getElementById('canvas');
@@ -96,11 +91,4 @@ btnAbsen.addEventListener('click', async () => {
         btnAbsen.disabled = false;
         btnAbsen.innerText = "Coba Lagi";
     }
-});    alert("Absensi Berhasil!");
-});
-
-// Jalankan saat halaman dibuka
-window.addEventListener('DOMContentLoaded', () => {
-    setupCamera();
-    checkLocation();
 });
