@@ -1,90 +1,38 @@
-// GANTI URL INI DENGAN MILIK ANDA
-const WEB_APP_URL = "URL_APPS_SCRIPT_ANDA_DI_SINI"; 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absensi Online SDN 1 Sobang</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; justify-content: center; padding: 20px; background: #f0f0f0; margin: 0; }
+        .container { background: white; padding: 20px; border-radius: 10px; max-width: 400px; width: 100%; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        #camera, #preview { width: 100%; border-radius: 10px; background: #ddd; margin-top: 10px; }
+        #preview { display: none; }
+        .status { margin: 15px 0; font-weight: bold; padding: 10px; border-radius: 5px; background: #eee; }
+        button { background: #ccc; color: white; border: none; padding: 15px; border-radius: 5px; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
+        button:not(:disabled) { background: #28a745; }
+        input { width: 90%; padding: 10px; margin-bottom: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+        h2 { color: #333; }
+    </style>
+</head>
+<body>
 
-// KOORDINAT KANTOR
-const OFFICE_LAT = -6.628209010488044;
-const OFFICE_LNG = 106.29402842818563;
-const MAX_DISTANCE = 100;
+<div class="container">
+    <h2>Absensi Online</h2>
+    <p>SDN 1 Sobang</p>
+    
+    <input type="text" id="nama-karyawan" placeholder="Masukkan Nama Lengkap">
+    
+    <video id="camera" autoplay playsinline></video>
+    <img id="preview">
+    <canvas id="canvas" style="display:none;"></canvas>
+    
+    <div id="location-status" class="status">Mengecek Lokasi...</div>
+    
+    <button type="button" id="btn-absen" disabled>Ambil Foto & Absen</button>
+</div>
 
-const video = document.getElementById('camera');
-const canvas = document.getElementById('canvas');
-const preview = document.getElementById('preview');
-const btnAbsen = document.getElementById('btn-absen');
-const locStatus = document.getElementById('location-status');
-const inputNama = document.getElementById('nama-karyawan');
-
-// Kamera
-navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
-    .then(stream => { video.srcObject = stream; })
-    .catch(err => alert("Kamera Error: " + err));
-
-// Hitung Jarak
-function getDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371000;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-}
-
-// Cek Lokasi tiap 3 detik
-setInterval(() => {
-    navigator.geolocation.getCurrentPosition(pos => {
-        const dist = getDistance(pos.coords.latitude, pos.coords.longitude, OFFICE_LAT, OFFICE_LNG);
-        if (dist <= MAX_DISTANCE) {
-            locStatus.innerHTML = `<span style="color:green">LOKASI OK (${Math.round(dist)}m)</span>`;
-            btnAbsen.disabled = false;
-            btnAbsen.style.background = "#28a745";
-        } else {
-            locStatus.innerHTML = `<span style="color:red">LUAR RADIUS (${Math.round(dist)}m)</span>`;
-            btnAbsen.disabled = true;
-            btnAbsen.style.background = "#ccc";
-        }
-    }, err => console.error(err), { enableHighAccuracy: true });
-}, 3000);
-
-// Tombol Absen
-btnAbsen.addEventListener('click', async () => {
-    const nama = inputNama.value;
-    if (!nama) {
-        alert("Isi nama dulu!");
-        return;
-    }
-
-    btnAbsen.innerText = "Memproses...";
-    btnAbsen.disabled = true;
-
-    canvas.width = 320;
-    canvas.height = 240;
-    canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
-    const fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
-
-    preview.src = fotoBase64;
-    preview.style.display = "block";
-    video.style.display = "none";
-
-    navigator.geolocation.getCurrentPosition(async pos => {
-        const payload = {
-            nama: nama,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            photo: fotoBase64
-        };
-
-        try {
-            await fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(payload)
-            });
-            alert("ABSENSI BERHASIL TERKIRIM!");
-            btnAbsen.innerText = "BERHASIL";
-        } catch (err) {
-            alert("Gagal kirim: " + err);
-            btnAbsen.disabled = false;
-            btnAbsen.innerText = "Coba Lagi";
-        }
-    });
-});
+<script src="script.js"></script>
+</body>
+</html>
