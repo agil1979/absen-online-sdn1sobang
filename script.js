@@ -1,4 +1,4 @@
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxwZKJIxXuhMklg8w8KG2vOsqR0P_GGxy7OEgWb7liedqiuYE9prl6lZqoQ59jEGqM0/exec"; // PASTIKAN SUDAH DIGANTI!
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweAz1viAa5Wx5GQTUwJ6Ch4Mt0HWLwjphyqI4PF7OdFj3bjiD2MmkzKGBVOlRD3WWU/exec"; // PASTIKAN SUDAH DIGANTI!
 const OFFICE_LAT = -6.628209010488044; 
 const OFFICE_LNG = 106.29402842818563;
 const MAX_DISTANCE = 100;
