@@ -1,6 +1,6 @@
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzJ-BHo7nOTVO7iEFhGzVRwkAY5ybixq8NjFv4jOdx4nwZe0TyY8Se2qrP1j5yGCNZF/exec"; // PASTIKAN SUDAH DIGANTI!
-const OFFICE_LAT = -6.2146; 
-const OFFICE_LNG = 106.8451;
+const OFFICE_LAT = -6.628209010488044; 
+const OFFICE_LNG = 106.29402842818563;
 const MAX_DISTANCE = 100;
 
 const video = document.getElementById('camera');
