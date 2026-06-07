@@ -55,7 +55,54 @@ function checkLocation() {
 
             if (dist <= MAX_DISTANCE) {
                 locStatus.innerHTML = `<span class='success'>LOKASI TERVERIFIKASI (${Math.round(dist)}m)</span>`;
-                btnAbsen.disabled = false;
+                // GANTI DENGAN URL WEB APP ANDA DARI LANGKAH 2
+const WEB_APP_URL = "ISI_DENGAN_URL_GOOGLE_APPS_SCRIPT_ANDA";
+
+btnAbsen.addEventListener('click', async () => {
+    // 1. Ambil Nama (Bisa diganti dengan input form nanti)
+    const namaUser = prompt("Masukkan Nama Lengkap Anda:");
+    if (!namaUser) return alert("Nama harus diisi!");
+
+    // 2. Proses Ambil Foto (Kualitas diperkecil agar tidak lemot)
+    canvas.width = 320; // Ukuran diperkecil agar data tidak terlalu besar
+    canvas.height = 240;
+    canvas.getContext('2d').drawImage(video, 0, 0, 320, 240);
+    
+    // Gunakan JPEG dengan kualitas 0.5 agar hemat memori di Google Sheet
+    const photoData = canvas.toDataURL('image/jpeg', 0.5); 
+    
+    preview.src = photoData;
+    preview.style.display = 'block';
+    video.style.display = 'none';
+    btnAbsen.disabled = true;
+    btnAbsen.innerText = "Mengirim...";
+
+    // 3. Kirim Data ke Google Sheets
+    const payload = {
+        nama: namaUser,
+        lat: document.getElementById('lat').value,
+        lng: document.getElementById('lng').value,
+        photo: photoData
+    };
+
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        
+        const resData = await response.json();
+        if(resData.status === 'success') {
+            alert("Absensi Berhasil Tersimpan di Google Sheets!");
+            btnAbsen.innerText = "Berhasil!";
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Gagal mengirim data. Coba lagi.");
+        btnAbsen.disabled = false;
+        btnAbsen.innerText = "Ambil Foto & Absen";
+    }
+});
                 document.getElementById('lat').value = uLat;
                 document.getElementById('lng').value = uLng;
             } else {
